@@ -5,6 +5,11 @@ const path = require('path')
 const app = express()
 const cors = require('cors')
 
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
+
 app.use(cors())
 
 let accessLogStream = fs.createWriteStream(path.join(
@@ -114,7 +119,3 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
