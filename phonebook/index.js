@@ -1,9 +1,12 @@
+require('dotenv').config()
+
 const express = require('express')
 const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const app = express()
 const cors = require('cors')
+const Person = require('./models/person')
 
 
 
@@ -53,14 +56,21 @@ app.get('/api/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
+  let persons = []
+  Person.find({}).then(result => {
+    result.forEach(person => {
+      persons.push(person)
+    })
     response.send(persons)
+  })
 }
 )
-
+/*
 const generateId = () => {
     return parseInt(Math.random() * 10000)
 }
-
+*/
+/*
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
@@ -74,6 +84,7 @@ app.post('/api/persons', (request, response) => {
       error: 'Number is missing' 
     })
   }
+  
   for (let i = 0; i < persons.length; i++) {
     const element = persons[i];
     if (element.name == body.name) {
@@ -83,33 +94,71 @@ app.post('/api/persons', (request, response) => {
     }
     
   }
+  
+
+  const person = new Person({
+    name: body.name,
+    number: body.number
+    //id: generateId(),
+  })
+
+  //persons = persons.concat(person)
+
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
+*/
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'name is missing' })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
+
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
 
   const person = {
     name: body.name,
     number: body.number,
-    id: generateId(),
   }
 
-  persons = persons.concat(person)
-
-  response.json(person)
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id).then(person => {
     if (person) {
-        response.json(person)
+      response.json(person)
     } else {
-        response.status(404).end()
+      response.status(404).end()
     }
+  })
+  .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
-
-  response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -118,7 +167,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
