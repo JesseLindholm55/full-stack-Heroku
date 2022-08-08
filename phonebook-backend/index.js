@@ -39,7 +39,7 @@ let persons = [
 app.use(express.json())
 
 app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+  response.send('<h1>Hello World!</h1><div>Heroku test J.L</div><div>Full stack open course backend</div>')
 })
 
 app.get('/api/info', (request, response) => {
