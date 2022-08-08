@@ -25,3 +25,9 @@ GET /api/persons 200 223 - 0.264 ms
 POST /api/persons 200 42 - 0.453 ms
 GET /api/persons 200 266 - 0.241 ms
 PUT /api/persons/5626 404 28 - 0.568 ms
+GET /api/persons 200 223 - 3.098 ms
+GET /api/persons 304 - - 0.715 ms
+DELETE /api/persons/4 204 - - 0.506 ms
+GET /api/persons 200 163 - 0.360 ms
+GET /api/persons 304 - - 0.294 ms
+GET /api/persons 200 223 - 2.760 ms
