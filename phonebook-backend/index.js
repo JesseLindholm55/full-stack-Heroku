@@ -5,15 +5,12 @@ const path = require('path')
 const app = express()
 const cors = require('cors')
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+
 
 app.use(cors())
 
 let accessLogStream = fs.createWriteStream(path.join(
-  './../phonebook-backend', 'access.log'), { flags: 'a' })
+  'access.log'), { flags: 'a' })
 app.use(morgan('tiny', {stream: accessLogStream}))
 
 let persons = [
@@ -118,4 +115,9 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
 

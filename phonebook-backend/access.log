@@ -30,4 +30,5 @@ GET /api/persons 304 - - 0.715 ms
 DELETE /api/persons/4 204 - - 0.506 ms
 GET /api/persons 200 163 - 0.360 ms
 GET /api/persons 304 - - 0.294 ms
-GET /api/persons 200 223 - 2.760 ms
+GET /api/persons 200 223 - 2.760 msGET / 304 - - 3.420 ms
+GET /favicon.ico 404 28 - 0.981 ms
